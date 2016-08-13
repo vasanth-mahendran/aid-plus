@@ -6,7 +6,7 @@ Our app AIDPLUS is the drug catalog which enables users to search through the dr
 
 ## Screens in the Application:
 ### Home screen:
-Screen which display the information/Use about the application and information about our Team CRAZY-ENGINEERS. User can give their search term in the search text box and hit search button to submit their search.
+Screen which display the information/Use about the application and information about my Team name CRAZY-ENGINEERS. User can give their search term in the search text box and hit search button to submit their search.
 ### List Screen:
 Search will land in the List Screen where user can view the search results which matches the search string. This screen will view full name of 15 drugs at a time and also has slider to navigate and view next or previous 15 drugs in the search results.
 ### Detail Screen:
