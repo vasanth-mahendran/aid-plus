@@ -1,0 +1,321 @@
+<template name="details">
+    <div id="about" class="container-fluid-rest">
+        <a class="glyphicon glyphicon-chevron-left" onclick="history.go(-1);"></a><h2>{{rxterm.DISPLAY_NAME}}</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#rxterm">NIH</a></li>
+            {{#with drug_cursor}}
+                {{#if this.count}}
+                    <li><a data-toggle="tab" href="#drug">FDA</a></li>
+                {{/if}}
+            {{/with}}
+            {{#with ndfdrug}}
+                {{#if this.count}}
+                    <li><a data-toggle="tab" href="#ndfdrug">VA</a></li>
+                {{/if}}
+            {{/with}}
+        </ul>
+
+        <div class="tab-content">
+            <div id="rxterm" class="tab-pane fade in active">
+                <h3>NIH – RxTerms</h3>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Rx Details</div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            {{#unless isEmpty rxterm.BRAND_NAME}}
+                                {{#with rxterm.BRAND_NAME}}
+                                    <li class="list-group-item">
+                                        <span class="badge">Brand Name</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                            {{#unless isEmpty rxterm.FULL_NAME}}
+                                {{#with rxterm.FULL_NAME}}
+                                    <li class="list-group-item">
+                                        <span class="badge">Full Name</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                            {{#unless isEmpty rxterm.ROUTE}}
+                                {{#with rxterm.ROUTE}}
+                                    <li class="list-group-item">
+                                        <span class="badge">Route</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                            {{#unless isEmpty rxterm.STRENGTH}}
+                                {{#with rxterm.STRENGTH}}
+                                    <li class="list-group-item">
+                                        <span class="badge">Strength</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                            {{#unless isEmpty rxterm.NEW_DOSE_FORM}}
+                                {{#with rxterm.NEW_DOSE_FORM}}
+                                    <li class="list-group-item">
+                                        <span class="badge">Dose Form</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                            {{#unless isEmpty rxterm.TTY}}
+                                {{#with rxterm.TTY}}
+                                    <li class="list-group-item">
+                                        <span class="badge">TTY</span>
+                                        {{this}}
+                                    </li>
+                                {{/with}}
+                            {{/unless}}
+                        </ul>
+                    </div>
+                </div>
+                {{#with rxterm_ing}}
+                    {{#if this.count}}
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#ingrediants">Ingrediants</a>
+                                    </h4>
+                                </div>
+                                <div id="ingrediants" class="panel-collapse collapse">
+                                    <ul class="list-group">
+                                        {{#each this}}
+                                            {{> rxterming}}
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/with}}
+            </div>
+            <div id="drug" class="tab-pane fade">
+                <h3>FDA - Adverse Event Reporting</h3>
+                {{#each drug_cursor}}
+                    {{> drugtemplate drug=this index=@index}}
+                {{/each}}
+            </div>
+
+            {{#with ndfdrug}}
+                {{#if this.count}}
+                    <div id="ndfdrug" class="tab-pane fade">
+                        <h3>VA - National Drug File</h3>
+                        {{#each this}}
+                            {{> ndf ndf_drug=this index=@index}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+            {{/with}}
+        </div>
+    </div>
+</template>
+
+<template name="rxterming">
+    <li class="list-group-item">{{INGREDIENT}}</li>
+</template>
+
+<template name="property">
+    <li class="list-group-item">
+        <span class="badge">{{name}}</span>
+        {{value}}
+    </li>
+    <ul class="list-group">
+        {{#each qualifiers}}
+            {{> qualifier}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="qualifier">
+    <li class="list-group-item">
+        <span class="badge">{{name}}</span>
+        {{value}}
+    </li>
+</template>
+
+<template name="ndf">
+    <ul class="list-group">
+        <li class="list-group-item">
+            <span class="badge">Code</span>
+            {{ndf_drug.code}}
+        </li>
+        <li class="list-group-item">
+            <span class="badge">Name</span>
+            {{ndf_drug.name}}
+        </li>
+        <div class="panel-group" id="accordion">
+            {{#with ndf_drug.properties}}
+                {{#if this.length}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#properties{{../index}}">Properties</a>
+                            </h4>
+                        </div>
+                        <div id="properties{{../index}}" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    {{#each this}}
+                                        {{> property}}
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/with}}
+            {{#with ndf_drug.definingRoles}}
+                {{#if this.length}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#roles{{../index}}">Roles</a>
+                            </h4>
+                        </div>
+                        <div id="roles{{../index}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{#each this}}
+                                    {{> property}}
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/with}}
+            {{#with ndf_drug.definingConcepts}}
+                {{#if this.length}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#concepts{{../index}}">Concepts</a>
+                            </h4>
+                        </div>
+                        <div id="concepts{{../index}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    {{#each this}}
+                                        {{> concepts}}
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/with}}
+        </div>
+    </ul>
+</template>
+
+<template name="drugtemplate">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#drug{{index}}">{{drug.drugname}}<span class="badge mybadgeclass">{{index}}</span></a>
+            </h4>
+        </div>
+        <div id="drug{{index}}" class="panel-collapse collapse">
+            <div class="panel-body">
+                <ul class="list-group">
+                    {{#unless isEmpty drug.dose_vbm}}
+                        {{#with drug.dose_vbm}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose Vbm</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.route}}
+                        {{#with drug.route}}
+                            <li class="list-group-item">
+                                <span class="badge">Route</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.dose_unit}}
+                        {{#with drug.dose_unit}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose unit</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.role_cod}}
+                            {{#with drug.role_cod}}
+                                <li class="list-group-item">
+                                    <span class="badge">Role cod</span>
+                                    {{this}}
+                                </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.cum_dose_chr}}
+                        {{#with drug.cum_dose_chr}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose chr</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.dose_form}}
+                        {{#with drug.dose_form}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose form</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.lot_num}}
+                        {{#with drug.lot_num}}
+                            <li class="list-group-item">
+                                <span class="badge">Lot num</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.val_vbm}}
+                        {{#with drug.val_vbm}}
+                            <li class="list-group-item">
+                                <span class="badge">Val vbm</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.dose_amt}}
+                        {{#with drug.dose_amt}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose amt</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.dose_freq}}
+                        {{#with drug.dose_freq}}
+                            <li class="list-group-item">
+                                <span class="badge">Dose freq</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                    {{#unless isEmpty drug.cum_dose_unit}}
+                        {{#with drug.cum_dose_unit}}
+                            <li class="list-group-item">
+                                <span class="badge">Cum Dose unit</span>
+                                {{this}}
+                            </li>
+                        {{/with}}
+                    {{/unless}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="concepts">
+    <li class="list-group-item">{{this}}</li>
+</template>

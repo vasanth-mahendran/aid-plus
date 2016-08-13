@@ -1,0 +1,48 @@
+<template name="list">
+    <div id="services" class="container-fluid-rest text-center">
+        <a class="glyphicon glyphicon-chevron-left" onclick="history.go(-1);"></a>
+        {{#if Template.subscriptionsReady}}
+            <h3>Found what you looked for? <span><a href="/">search again</a></span></h3>
+            <div class="list-group">
+                {{#each rxterms}}
+                    {{> rxterm}}
+                {{else}}
+                    <div class="alert alert-danger" role="alert">
+                        <h3>Sorry we could not able to find anything.Please try
+                            <span><a href="/">searching again</a></span>
+                        </h3>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Search tips (search with full or part of the below drug details)</div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Brand name</li>
+                                <li class="list-group-item">full name</li>
+                                <li class="list-group-item">Display name</li>
+                            </ul>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <p> Showing {{startcount}} to {{endcount}} of {{totalcount}}</p>
+            <ul class="pager">
+                <li class="{{prevPageClass}}">
+                    <a id="prevPage" href="{{prevPage}}" class="prevPage">
+                        <span aria-hidden="true">&larr;</span> Previous
+                    </a>
+                </li>
+                <li class="{{nextPageClass}}">
+                    <a id="nextPage" href="{{nextPage}}" class="nextPage">
+                        Next <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            </ul>
+        {{else}}
+            {{> spinner}}
+        {{/if}}
+    </div>
+</template>
+
+<template name="rxterm">
+    <a class="list-group-item" href="/details/{{RXCUI}}">{{FULL_NAME}}</a>
+</template>

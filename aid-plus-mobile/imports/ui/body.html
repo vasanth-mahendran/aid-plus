@@ -1,0 +1,67 @@
+<template name="search">
+    <div class="jumbotron text-center">
+        <h1>AidPlus</h1>
+        <p>We get you what you are looking for</p>
+        <form class="new-task">
+            <input type="text" name="text" class="form-control" size="50" placeholder="Type Drug name or Brand name" required pattern="[a-zA-Z0-9\s]+">
+            <button type="submit" class="btn btn-search">Search</button>
+        </form>
+    </div>
+    <!-- Container (About Section) -->
+    <div id="about" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2>About Crazy Engineers</h2><br>
+                <h4>write something about us.</h4><br>
+                <p>write something about us.</p>
+                <br><button class="btn btn-default btn-lg">Get in Touch</button>
+            </div>
+        </div>
+    </div>
+    <!-- Container (Services Section) -->
+    <div id="services" class="container-fluid text-center">
+        <h2>SERVICES</h2>
+        <h4>What we offer</h4>
+
+    </div>
+    <!-- Container (Contact Section) -->
+    <div id="contactus" class="container-fluid bg-grey">
+        <h2 class="text-center">CONTACT</h2>
+        <div class="row">
+            <div class="col-sm-5">
+                <p>Contact us and we'll get back to you within 24 hours.</p>
+                <p><span class="glyphicon glyphicon-map-marker"></span> Chicago, US</p>
+                <p><span class="glyphicon glyphicon-phone"></span> +00 1515151515</p>
+                <p><span class="glyphicon glyphicon-envelope"></span> myemail@something.com</p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="main">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="mytop" class="navbar-brand" href="/">AidPlus</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{pathFor 'home'}}#about">ABOUT</a></li>
+                    <li><a href="{{pathFor 'home'}}#services">SERVICES</a></li>
+                    <li><a href="{{pathFor 'home'}}#contactus">CONTACT</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {{> yield}}
+    <footer class="container-fluid text-center">
+        <a href="#mytop" title="To Top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+    </footer>
+</template>
